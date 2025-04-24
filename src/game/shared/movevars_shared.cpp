@@ -88,6 +88,10 @@ ConVar	sv_friction		( "sv_friction","4", FCVAR_NOTIFY | FCVAR_REPLICATED, "World
 ConVar	sv_friction		( "sv_friction","4", FCVAR_NOTIFY | FCVAR_REPLICATED, "World friction." );
 #endif // DOD_DLL || CSTRIKE_DLL
 
+
+ConVar	sv_crouchjump		( "sv_crouchjump", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "Enables jumping while crouched." );
+ConVar	sv_allowbhop		( "sv_allowbhop", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Allows clients to hold space to keep jumping." );
+
 #if defined( CSTRIKE_DLL ) || defined( HL1MP_DLL )
 ConVar	sv_bounce		( "sv_bounce","0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Bounce multiplier for when physically simulated objects collide with other objects." );
 ConVar	sv_maxvelocity	( "sv_maxvelocity","3500", FCVAR_REPLICATED, "Maximum speed any ballistically moving object is allowed to attain per axis." );

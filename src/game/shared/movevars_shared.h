@@ -50,4 +50,8 @@ extern ConVar r_AirboatViewDampenFreq;
 extern ConVar r_AirboatViewDampenDamp;
 extern ConVar r_AirboatViewZHeight;
 
+// Mod convars
+extern ConVar sv_crouchjump;
+extern ConVar sv_allowbhop;
+
 #endif // MOVEVARS_SHARED_H

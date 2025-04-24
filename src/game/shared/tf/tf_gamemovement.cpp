@@ -82,7 +82,7 @@ extern ConVar cl_backspeed;
 extern ConVar cl_sidespeed;
 extern ConVar mp_tournament_readymode_countdown;
 
-#define TF_MAX_SPEED   (400 * 1.3)	// 400 is Scout max speed, and we allow up to 3% movement bonus.
+#define TF_MAX_SPEED   (float)INT32_MAX	// 400 is Scout max speed, and we allow up to 3% movement bonus.
 
 #define TF_WATERJUMP_FORWARD	30
 #define TF_WATERJUMP_UP			300
@@ -1083,33 +1083,10 @@ void CTFGameMovement::AirDash( void )
 #endif // GAME_DLL
 }
 
-// Only allow bunny jumping up to 1.2x server / player maxspeed setting
-#define BUNNYJUMP_MAX_SPEED_FACTOR 1.2f
-
 //-----------------------------------------------------------------------------
-// Purpose: 
+// :)
 //-----------------------------------------------------------------------------
-void CTFGameMovement::PreventBunnyJumping()
-{
-	if ( m_pTFPlayer->m_Shared.InCond( TF_COND_HALLOWEEN_KART ) )
-		return;
-
-	// Speed at which bunny jumping is limited
-	float maxscaledspeed = BUNNYJUMP_MAX_SPEED_FACTOR * player->m_flMaxspeed;
-	if ( maxscaledspeed <= 0.0f )
-		return;
-
-	// Current player speed
-	float spd = mv->m_vecVelocity.Length();
-	if ( spd <= maxscaledspeed )
-		return;
-
-	// Apply this cropping fraction to velocity
-	float fraction = ( maxscaledspeed / spd );
-
-
-	mv->m_vecVelocity *= fraction;
-}
+void CTFGameMovement::PreventBunnyJumping() { }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -1222,23 +1199,30 @@ bool CTFGameMovement::CheckJumpButton()
 
 	ToggleParachute();
 
-	// Cannot jump will ducked.
-	if ( player->GetFlags() & FL_DUCKING )
+	if ( sv_crouchjump.GetFloat() <= 0 )
 	{
-		// Let a scout do it.
-		bool bAllow = ( bScout && !bOnGround );
+		// Cannot jump while ducked.
+		if ( player->GetFlags() & FL_DUCKING )
+		{
+			// Let a scout do it.
+			bool bAllow = ( bScout && !bOnGround );
 
-		if ( !bAllow )
+			if ( !bAllow )
+			return false;
+		}
+
+		// Cannot jump while in the unduck transition.
+		if ( ( player->m_Local.m_bDucking && (  player->GetFlags() & FL_DUCKING ) ) || ( player->m_Local.m_flDuckJumpTime > 0.0f ) )
 			return false;
 	}
+	
 
-	// Cannot jump while in the unduck transition.
-	if ( ( player->m_Local.m_bDucking && (  player->GetFlags() & FL_DUCKING ) ) || ( player->m_Local.m_flDuckJumpTime > 0.0f ) )
-		return false;
-
-	// Cannot jump again until the jump button has been released.
-	if ( mv->m_nOldButtons & IN_JUMP )
-		return false;
+	if ( sv_allowbhop.GetFloat() <= 0 )
+	{
+		// Cannot jump again until the jump button has been released.
+		if ( mv->m_nOldButtons & IN_JUMP )
+			return false;
+	}
 
 	// In air, so ignore jumps 
 	// (unless you are a scout or ghost or parachute
