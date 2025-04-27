@@ -22436,3 +22436,7 @@ void CTFGameRules::RegisterScriptFunctions()
 }
 
 #endif // GAME_DLL
+
+
+// Mod gamerules
+ConVar sv_enemyteleporters ( "sv_enemyteleporters", "1", FCVAR_REPLICATED | FCVAR_NOTIFY, "Any player can use any teleporter." );

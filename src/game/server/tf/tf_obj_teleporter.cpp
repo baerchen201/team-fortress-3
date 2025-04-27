@@ -525,7 +525,7 @@ bool CObjectTeleporter::PlayerCanBeTeleported( CTFPlayer *pPlayer )
 	if ( !pBuilder && m_bWasMapPlaced == false )
 		return false;
 
-	if ( pPlayer->IsPlayerClass( TF_CLASS_SPY ) )
+	if ( sv_enemyteleporters.GetFloat() <= 0 || pPlayer->IsPlayerClass( TF_CLASS_SPY ) )
 		return true;
 
 	if ( pBuilder && pBuilder->GetTeamNumber() != pPlayer->GetTeamNumber() )

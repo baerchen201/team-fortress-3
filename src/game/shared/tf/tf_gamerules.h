@@ -1886,3 +1886,6 @@ public:
 #endif
 
 #endif // TF_GAMERULES_H
+
+// Mod gamerules
+extern ConVar sv_enemyteleporters;

@@ -45,6 +45,8 @@
 #include "weapon_physcannon.h"
 #endif
 
+#define TF_HEALTHKIT_PICKUP_SOUND	"HealthKit.Touch"
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -835,6 +837,23 @@ CON_COMMAND_F( buddha, "Toggle.  Player takes damage but won't die. (Shows red c
 			pPlayer->m_debugOverlays |= OVERLAY_BUDDHA_MODE;
 			Msg("Buddha Mode on...\n");
 		}
+	}
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+CON_COMMAND_F( devhealth, "gives a gazillion health", FCVAR_CHEAT )
+{
+	CBasePlayer *pPlayer = ToBasePlayer( UTIL_GetCommandClient() ); 
+	if ( pPlayer )
+	{
+		pPlayer->SetHealth(INT32_MAX);
+		CSingleUserRecipientFilter user( pPlayer );
+		pPlayer->EmitSound( user, pPlayer->entindex(), TF_HEALTHKIT_PICKUP_SOUND );
+	}
+	else
+	{
+		Msg("man fuck you");
 	}
 }
 
